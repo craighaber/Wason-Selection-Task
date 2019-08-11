@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Wason Selction Task</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+
+	<!--jQuery-->
+	<script src= "https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<!--Bootstrap-->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+</head>
+
+<body>
+	<h1 id="title">Wason Selection Task</h1>
+	<p id="task" class="m-top">In this task you are given the four cards shown below. Each card has a letter on one side and a number on the other side.</p>
+	<p class="m-top">Your task is to flip over the card(s) necessary to judge whether the following proposition is true:</p>
+	<p class="m-top"><b>If the card has an odd number on one side, then it has a vowel on the other side.</b></p>
+	<p id="now" class="m-top">Now click each card that you need to flip over, and when you are ready click the submit button below.</p>
+	<div class="flex-container">
+		<div id="four" class="card">4</div>
+		<div id="seven" class="card">7</div>
+		<div id="G" class="card">G</div>
+		<div id= "A" class="card">A</div>
+
+
+	</div>	
+	<button id="submit"  type="button" class="btn btn-primary" onclick="submitAnswer()">Submit</button>
+	<script>
+	 var playedAlready = false;	
+	 $('.card').click(function(){
+	 	if (!playedAlready){
+	 		 	if (!$(this).hasClass("selected")) { 
+	 		 	   $(this).addClass("selected");
+	 		 	 } else{
+	 		 	 	$(this).removeClass("selected");
+	 		 	 }
+	 	}		
+	})
+	 	
+
+	 function submitAnswer(){
+	 	//disable submit button
+	 	document.getElementById("submit").disabled = true;
+	 	//disable pointer cursor
+	 	$(".card").css("cursor", "default");
+
+	 	playedAlready = true;
+	 	var selectedCards = $('.card.selected');
+	 	var flagseven = false;
+	 	var flagG = false;
+	 	var flagfour = false;
+	 	var flagA = false;
+
+	 	selectedCards.each(function(){
+	 		if ($(this).attr('id') ==='seven'){
+	 			flagseven = true;
+	 		}	
+	 		if ($(this).attr('id') ==='G'){
+	 			flagG = true;
+	 		}
+	 		if ($(this).attr('id') ==='four'){
+	 			flagfour = true;
+	 		}	
+	 		if ($(this).attr('id') ==='A'){
+	 			flagA = true;
+	 		}
+	 	});
+
+
+	 	var a = [];
+	 	//if the user only selected flag seven and G
+	 	if(flagseven && flagG && !flagfour && !flagA){
+	 		a.push("<p id='correct'>You answered correctly, nice job!</p>");
+
+	 	//if the user chose flag7 and didn't choose flag G (common response indicating confirmation bias)
+	 	}else if(flagseven && !flagG){
+	 		a.push("<p id='incorrect'>You answered incorrectly. Your decision may have been affected by confirmation bias!</p>");	
+	 	} else{
+	 		
+	 		a.push("<p id='incorrect'>You answered incorrectly.</p>");
+	 	}
+	 	a.push("<p id='why'>Here's why:</p>");
+	 	a.push("<ul>");
+	 	a.push("  <li><b>4</b>: You do not need to flip over this card. The number 4 is even, and the rule says nothing about needing to test even numbers.</li>")
+	 	a.push("  <li><b>7</b>: You need to flip over this card. It has the odd number 7 on one side so you need to flip it over to verify that it has a vowel on the other side. Otherwise, the proposition is disproven.</li>")
+	 	a.push("  <li><b>G</b>: You need to flip over this card. It has a consonant (non-vowel) on one side, so you need to flip it over to verify that the other side does not have an odd number. If it has an odd number on the other side it disproves the proposition because one side has an odd number but does not have a vowel on the other side.</li>")
+	 	a.push("  <li><b>A</b>: You do not need to flip over this card. The card shows A, a vowel, so if the other side has an odd number that means the rule is upheld. If the other side has an even number then it has no bearing on the proposition. That means that the rule is upheld no matter what is on the other side, so there is no need to flip it over to judge the truth of the proposition.</li>")
+
+	 	a.push("</ul>");
+
+	 	a.push("<p class='exp'>Most people do not flip over the card with G because of a phenomenon known as confirmation bias. People with confirmation bias tend to only seek out evidence that confirms their beliefs and ignore information that goes against their beliefs. Although people are supposed to try to find evidence that could prove or disprove the proposition, people tend to focus on proving it instead of disproving it. They often ignore the fact that the proposition can be disproven if the card with G has an odd number on the other side. In other words, they ignore the evidence that only serves to disprove the proposition due to confirmation bias.</p>");
+
+	 	a.push("<p class='exp' id='exp-2'>Another interesting component of the Wason Selection Task is that people tend to do better when the cards have a real-world context. For example, now let's look at a version of the task where we have cards with a beverage at one side and an age on the other side. Consider the following proposition:</p>")
+	 	a.push("<p id='prop-2'><b>If a person drinks alcohol, then they must be over 21 years old.</b></p>");
+	 	a.push("<div class='flex-container'>")
+	 	a.push("<div id='beer' class='card2'><img src= 'images/beer.png'></div>");
+	 	a.push("<div id='coke' class='card2'><img src= 'images/coke.png'></div>");
+	 	a.push("<div id='sixteen' class='card2'>16 years old</div>");
+	 	a.push("<div id='twentytwo' class='card2'>22 years old</div>");
+	 	a.push("</div>")
+
+	 	a.push("<p class='exp'>When people are told to only flip over the cards necessary to judge the truth of this statement, most people are able to get this correct. In case you have not figured it out already, the answer is to flip over the beer card and the '16 years old' card. People tend to be much better at recognizing to flip over the '16 years old' card than the 'G' card in the example above even though they both need to flipped over for the same logical reason.<p>");
+
+	 	a.push("<p class='exp'>Why does this happen? Shouldn't our logical reasoning skills be consistent among different situations? One possible explanation is the dual process theory founded by Daniel Kahneman. The central idea is that we have two systems of thinking. System 1 is our subconscious 'gut-feeling' that is fast and prone to errors and biases. You tend to use this system when you are doing quick mental math or making snap judgements. System 2 is our conscious stream of thought that is slower and more deliberate. You tend to use this system when you are thinking about how to cook a recipe about how to solve more complex math problems. Here is a clear illustration of the differences between the two systems: <p><br>");
+	 	a.push("<img id= 'systems' src='images/systems.jpg'>")
+
+	 	a.push("<p class='exp'>Research has found that people tend to use System 1 far more often than System 2 in the Wason Selection Task. As a result, people are likely to do poorly when the rules are abstract because their thought processes are suscesptible to confirmation bias. On the other hand, they perform better when there is a real-world context because they have been exposed to so many of these types of situations that an automatic response is still good enough to get the correct answer.<p>");
+
+	 	 a.push("<p class='exp'>Another explanation for why people are less susceptible to confirmation bias in a real-world context is that people have adapted to quickly notice breaches of 'social contracts'. Leda Cosmides is an evolutionary psychologist and well-known proponent of this theory, and she argues that people develop cognitive reasoning skills by observing social situations. From an evolutionary perspective, it is more beneficial for us to learn to reason in social situations than through abstract scenarios. Thus, people are simply better at applying reasoning to contexts with social consequences, such as knowing to check whether the sixteen-year-old is drinking illegally in the example above. </p>");
+
+	 	 a.push("<p class='exp'>The Wason Selection Task can also potentially be used for diagnostic purposes. For example, people with Autism Spectrum Disorder perform significantly worse on the 'social-contract' versions of the Wason Selection Task than people without the disorder. This supports the theory proposed by Leda Cosmides because people with ASD tend to have a harder time understanding social contracts. In addition, people with delusions tend to perform significantly worse on realistic versions of the Wason Selection Task than people without delusions. However, there are no significant differences between people with and without delusions when the task requires abstract reasoning.</p>");
+
+	 	 a.push("<p class='exp'>In conclusion, the Wason Selection Task has helped us learn a lot about cognitive processes and is still studied frequently in experiments today. One major takeaway from researching this task is that most people allow confirmation bias to influence their decisions. Now that you are aware of confirmation bias  you can make an effort to overcome it. When solving problems in the future, it may be helpful to suppress the natural urge to use System 1 and use System 2 instead. It will be more time-consuming, but System 2 is  more accurate! </p>");
+
+	 	 a.push("<h2 id='sources'>References</h2>");
+	 	 a.push("<p class='source'> Cosmides, Leda & Tooby, John, Evolutionary psychology: A Primer.</p>");
+	 	 a.push("<p class='source'>Dudley, R., Young, A., John, C., & Over, D. (1998). Conditional Reasoning in People with Delusions: Performance on the Wason Selection Task. Cognitive Neuropsychiatry, 3(4), 241-258. doi:10.1080/135468098396071</p>");
+	 	 a.push("<p class='source'>J. Sullivan, R & Solomon, M & Minzenberg, Michael & Ragland, John & H. Yoon, J & Ursu, Stefan & Ermer, E & S. Carter, C. (2009). Are Social Deficits Content Dependent? Wason Selection Task Performance in ASD and Schizophrenia.</p>");
+	 	 a.push("<p class='source'>Sperber, D., Cara, F., & Girotto, V. (1995). Relevance theory explains the selection task. Cognition, 57(1), 31-95. doi:10.1016/0010-0277(95)00666-m</p>");
+	 	 a.push("<p class='source' id='bottom'>Wada, K. (2004). Cancel And Rethink In The Wason Selection Task: Further Evidence For The Heuristic-Analytic Dual Process Theory. Perceptual and Motor Skills, 98(4), 1315. doi:10.2466/pms.98.4.1315-1325</p>");
+	
+
+
+
+			
+
+
+
+
+
+	 	$("BODY").append(a.join(""));
+	
+	 }
+
+	</script>
+</body>	
+
+</html>
